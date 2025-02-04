@@ -5,11 +5,14 @@
             "label": "C/C++: g++.exe build active file",
             "command": "C:/msys64/ucrt64/bin/g++.exe",
             "args": [
+                "${workspaceFolder}\\src\\root\\math\\math.cpp",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
-                "${workspaceFolder}\\bin\\corvine.exe"
+                "${workspaceFolder}\\bin\\corvine.exe",
+                "-I",
+                "${workspaceFolder}\\include\\root\\math"
             ],
             "options": {
                 "cwd": "C:/msys64/ucrt64/bin"
