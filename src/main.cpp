@@ -2,16 +2,22 @@
 
 #include "math.hpp"
 
-int main(){
+#define Matrix math::Matrix
+#define Vector math::Vector
 
-    int arr[2][2] = {{1, 0}, {0, 1}};
-    math::Matrix<int> m1 = math::Matrix<int>((int *)arr, 2, 2);
-    math::Matrix<int> m2 = math::Matrix<int>((int *)arr, 2, 2);
+int main()
+{
 
-    if(m1 == m2)
-        std::cout << "True";
-    else
-        std::cout << "False";
+    Vector<float> v1 = Vector<float>(1, 2, 3);
+    Vector<int> v2 = v1;
+
+    std::cout << v1[0] << std::endl;
+    std::cout << v2[0] << std::endl;
+
+    if(v1 == v2)
+        std::cout << "TRUE!!!" << std::endl;
+    else   
+        std::cout << "FALSE!!!" << std::endl;
 
     return 0;
 }
