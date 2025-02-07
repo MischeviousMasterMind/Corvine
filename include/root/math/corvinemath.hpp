@@ -4,7 +4,7 @@
 /// @brief Every internal math function and constant used by Corvine. Includes \code <cmath> \endcode from C numerics library.
 /// @include <cmath>
 /// @author MindFlares
-namespace math
+namespace corvine
 {
 
     template <typename T>
