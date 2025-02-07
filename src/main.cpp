@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "math.hpp"
+#include "corvinemath.hpp"
 
 #define Matrix math::Matrix
 #define Vector math::Vector
@@ -9,15 +9,13 @@ int main()
 {
 
     Vector<float> v1 = Vector<float>(1, 2, 3);
-    Vector<int> v2 = v1;
+    Vector<float> v2 = Vector<int>(3, 2, 1);
 
-    std::cout << v1[0] << std::endl;
-    std::cout << v2[0] << std::endl;
+    Vector<float> arr[] = {v1, v2};
 
-    if(v1 == v2)
-        std::cout << "TRUE!!!" << std::endl;
-    else   
-        std::cout << "FALSE!!!" << std::endl;
+    Matrix<float> M = Matrix<float>(arr, 3, 2);
+
+    std::cout << M.at(2, 0) << std::endl;
 
     return 0;
 }

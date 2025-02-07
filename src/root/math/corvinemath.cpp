@@ -12,10 +12,9 @@ namespace math
     {
     private:
         std::size_t n;
-        T* val;
+        T *val;
 
     public:
-
         Vector(std::size_t dimensions)
         {
             val = new T[dimensions];
@@ -35,11 +34,10 @@ namespace math
             val[2] = z;
         }
 
-        Vector(T values[])
+        Vector(T values[], size_t n) : Vector(n)
         {
-            val = values;
-
-            n = sizeof(values) / sizeof(values[0]);
+            for(int i = 0; i < n; i++)
+                val[i] = values[i];
         }
 
         size_t size() const
@@ -47,14 +45,15 @@ namespace math
             return n;
         }
 
-        T* getArray() const
+        T *getArray() const
         {
             return val;
         }
 
         bool set(size_t indx, T num)
         {
-            if(indx >= n) return false;
+            if (indx >= n)
+                return false;
 
             val[n] = num;
 
@@ -65,28 +64,53 @@ namespace math
         {
             T sum = 0;
 
-            for(size_t i = 0; i < n; i++)
+            for (size_t i = 0; i < n; i++)
                 sum += val[i] * val[i];
-            
+
             return sqrt(sum);
         }
 
-        Vector& normalize()
+        Vector &normalize()
         {
-            if(norm() <= 0) return *this;
+            if (norm() <= 0)
+                return *this;
 
             double norm = this->norm();
 
-            for(size_t i = 0; i < n; i++)
+            for (size_t i = 0; i < n; i++)
                 val[i] /= norm;
-            
+
             return *this;
         }
 
-        template <typename U> Vector<U> getUnitVector()
+        template <typename U>
+        Vector<U> getUnitVector()
         {
             Vector<U> unit = (Vector<U>)*this;
             return unit.normalize();
+        }
+
+        template <typename U> T dot(Vector<U> v)
+        {
+            if(n != v.size()) return NAN;
+
+            T product = 0;
+
+            for(size_t i = 0; i < n; i++)
+                product += (*this)[i] * v[i];
+            
+            return product;
+        }
+
+        template <typename U> Vector cross(Vector<U> v)
+        {
+            if(n != 3 || v.size() != 3) return nullptr;
+
+            return Vector<T>(
+                (T)((*this)[1] * v[2] - (*this)[2] - v[1]),
+                (T)((*this)[2] * v[0] - (*this)[0] - v[2]),
+                (T)((*this)[0] * v[1] - (*this)[1] - v[0])
+            );
         }
 
         T operator[](std::size_t idx)
@@ -99,28 +123,31 @@ namespace math
             return this->val[idx];
         }
 
-        template <typename U> operator Vector<U>()
+        template <typename U>
+        operator Vector<U>()
         {
             Vector<U> copy = Vector<U>(n);
 
-            for(size_t i = 0; i < n; i++)
-                copy.set(i, (U)val[i]);
-            
+            for (size_t i = 0; i < n; i++)
+                copy.set(i, this->val[i]);
+
             return copy;
         }
 
-        template <typename U> Vector operator=(Vector<U> const &v)
+        template <typename U>
+        Vector operator=(Vector<U> const &v)
         {
-            n = v.size();
-            val = new T[n];
-            
-            for(int i = 0; i < n; i++)
-                val[i] = (T)v.getArray()[i];
+            this->n = v.size();
+            this->val = new T[n];
+
+            for (int i = 0; i < n; i++)
+                this[i] = (T)v[i];
 
             return *this;
         }
 
-        template <typename U> Vector operator+=(Vector<U> const &v)
+        template <typename U>
+        Vector operator+=(Vector<U> const &v)
         {
             if (this->n != v.n)
                 return nullptr;
@@ -131,25 +158,27 @@ namespace math
             return *this;
         }
 
-        template <typename U> Vector operator+(Vector<U> const &v)
+        template <typename U>
+        Vector operator+(Vector<U> const &v)
         {
             if (this->n != v.n)
                 return nullptr;
 
-            Vector sum = Vector(this->n);
+            Vector res = Vector(this->n);
 
             for (std::size_t i = 0; i < this->n; i++)
-                sum.val[i] = this->val[i] + v.val[i];
+                res.val[i] = this->val[i] + v.val[i];
 
-            return sum;
+            return res;
         }
 
         Vector operator+()
         {
             return *this;
         }
-        
-        template <typename U> Vector operator-=(Vector<U> const &v)
+
+        template <typename U>
+        Vector operator-=(Vector<U> const &v)
         {
             if (this->n != v.n)
                 return nullptr;
@@ -160,30 +189,68 @@ namespace math
             return *this;
         }
 
-        template <typename U> Vector operator-(Vector<U> const &v)
+        template <typename U>
+        Vector operator-(Vector<U> const &v)
         {
             if (this->n != v.n)
                 return nullptr;
 
-            Vector diff = Vector(this->n);
+            Vector res = Vector(this->n);
 
             for (std::size_t i = 0; i < this->n; i++)
-                diff.val[i] = this->val[i] - v.val[i];
+                res.val[i] = this->val[i] - v.val[i];
 
-            return diff;
+            return res;
         }
 
         Vector operator-()
         {
-            Vector neg = Vector(this->n);
+            Vector opp = Vector(n);
 
-            for (std::size_t i = 0; i < this->n; i++)
-                neg.val[i] = -this->val[i];
+            for (size_t i = 0; i < n; i++)
+                opp.val[i] = -this->val[i];
 
-            return neg;
+            return opp;
         }
 
-        template <typename U> bool operator==(Vector<U> const &v)
+        template<typename U> Vector operator*=(U scalar)
+        {
+            for(size_t i = 0; i < n; i++)
+                this->val[i] *= scalar;
+            
+            return *this;
+        }
+
+        template<typename U> Vector operator*(U scalar)
+        {
+            Vector res = Vector(n);
+
+            for(size_t i = 0; i < n; i++)
+                res.val[i] = this->val[i] * scalar;
+
+            return res;
+        }
+
+        template<typename U> Vector operator/=(U scalar)
+        {
+            for(size_t i = 0; i < n; i++)
+                this->val[i] /= scalar;
+            
+            return *this;
+        }
+
+        template<typename U> Vector operator/(U scalar)
+        {
+            Vector res = Vector(n);
+
+            for(size_t i = 0; i < n; i++)
+                res.val[i] = this->val[i] / scalar;
+
+            return res;
+        }
+
+        template <typename U>
+        bool operator==(Vector<U> const &v)
         {
             if (this->n != v.size())
                 return false;
@@ -195,17 +262,32 @@ namespace math
             return true;
         }
 
-        template <typename U> bool operator!=(Vector<U> const &v)
+        template <typename U>
+        bool operator!=(Vector<U> const &v)
         {
             return !(*this == v);
         }
     };
 
-    template <typename T>
-    struct Matrix
+    template<typename T, typename U> double angleBetween(Vector<T> v1, Vector<U> v2)
     {
+        return acos((double)(v1.dot(v2)) / (v1.norm() * v2.norm()));
+    }
+
+    template<typename T, typename U> Vector<T> operator*(U scalar, Vector<T> v)
+    {
+        return v * scalar;
+    }
+
+    template <typename T>
+    class Matrix
+    {
+    private:
         std::size_t m, n;
         T *val;
+
+    public:
+        Matrix() : Matrix(0, 0) {}
 
         Matrix(std::size_t m, std::size_t n)
         {
@@ -215,7 +297,7 @@ namespace math
             val = new T[m * n];
         }
 
-        Matrix(T *values, std::size_t m, std::size_t n) : Matrix(m, n)
+        Matrix(T *values, size_t m, size_t n) : Matrix(m, n)
         {
             val = values;
 
@@ -223,17 +305,31 @@ namespace math
                 val[i] = values[i];
         }
 
+        template <typename U> Matrix(Vector<U> arr[], size_t m, size_t n) : Matrix(m, n)
+        {
+            for(size_t i = 0; i < n; i++)
+            {
+                for(size_t ii = 0; ii < m; ii++)
+                {
+                    if(ii < arr[i].size())
+                        val[ii * n + i] = (arr[i])[ii];
+                    else
+                        val[ii * n + i] = 0;
+                }
+            }
+        }
+
         T at(std::size_t row, std::size_t col)
         {
             if (row > m || col > n)
-                return NULL;
+                return NAN;
             return val[row * n + col];
         }
 
         T set(std::size_t row, std::size_t col, T value)
         {
             if (row > m || col > n)
-                return NULL;
+                return NAN;
             val[row * n + col] = value;
             return value;
         }
