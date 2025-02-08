@@ -297,13 +297,13 @@ namespace corvine
             val = new T[m * n];
         }
 
-        Matrix(T *values, size_t m, size_t n) : Matrix(m, n)
-        {
-            val = values;
+        // Matrix(T *values, size_t m, size_t n) : Matrix(m, n)
+        // {
+        //     val = values;
 
-            for (std::size_t i = 0; i < m * n; i++)
-                val[i] = values[i];
-        }
+        //     for (std::size_t i = 0; i < m * n; i++)
+        //         val[i] = values[i];
+        // }
 
         template <typename U> Matrix(Vector<U> arr[], size_t m, size_t n) : Matrix(m, n)
         {
@@ -334,7 +334,29 @@ namespace corvine
             return value;
         }
 
-        bool operator==(const Matrix<T> &A)
+        size_t getNumOfRows()
+        {
+            return m;
+        }
+
+        size_t getNumOfCols()
+        {
+            return n;
+        }
+
+        Matrix transpose()
+        {
+            Matrix transposed = Matrix(m , n);
+
+            for(int i = 0; i < n; i++)
+                for(int ii = 0; ii < m; ii++)
+                    transposed.set(i, ii, at(ii, i));
+
+            return transposed;
+        }
+
+        template <typename U> 
+        bool operator==(const Matrix<U> &A)
         {
             if (this->m != A.m || this->n != A.n)
                 return false;
@@ -344,7 +366,35 @@ namespace corvine
 
             return true;
         }
+
+        template <typename U>
+        Matrix operator=(Matrix<U> const &A)
+        {
+            this->n = A.getNumOfCols();
+            this->m = A.getNumOfRows();
+            this->val = new T[n * m];
+
+            for (int i = 0; i < n; i++)
+                for(int ii = 0; ii < m; ii++)
+                    this->val[ii * n + i] = A.at(ii, i);
+
+            return *this;
+        }
     };
+
+    template <typename T> Matrix<T> transpose(Matrix<T> A)
+    {
+        A = A.transpose();
+    }
+
+    template <typename T> Matrix<T> transpose(Vector<T> v)
+    {
+        Matrix<T> A = Matrix(1, v.size());
+
+        for(int i = 0; i < v.size(); i++)
+            A.set(1, i) = v[i];
+    }
+
 
     const double POSITIVE_INFINITY = 1.0 / 0.0;
     const double NEGATIVE_INFINITY = -1.0 / 0.0;

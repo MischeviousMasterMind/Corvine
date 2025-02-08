@@ -2,8 +2,8 @@
 
 #include "corvinemath.hpp"
 
-#define Matrix math::Matrix
-#define Vector math::Vector
+#define Matrix corvine::Matrix
+#define Vector corvine::Vector
 
 int main()
 {
