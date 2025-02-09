@@ -1,3 +1,4 @@
+C:/Users/0KAY0/vscode-workspace/Corvine/build/CMakeFiles/corvine.dir
 C:/Users/0KAY0/vscode-workspace/Corvine/build/CMakeFiles/edit_cache.dir
 C:/Users/0KAY0/vscode-workspace/Corvine/build/CMakeFiles/rebuild_cache.dir
 C:/Users/0KAY0/vscode-workspace/Corvine/build/CMakeFiles/list_install_components.dir
