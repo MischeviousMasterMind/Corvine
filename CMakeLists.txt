@@ -1,9 +1,19 @@
 cmake_minimum_required(VERSION 3.14)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(Corvine CXX)
+project(Corvine VERSION 1.0.0)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+add_library(${PROJECT_NAME} SHARED
+    src/main.cpp
+    # Add any extra C++ source files here
+    src/root/math/corvinemath.cpp
+)
+
+include_directories(include/root/math)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -13,7 +23,5 @@ FetchContent_Declare(
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-
-include_directories(include/root/math)
 
 add_executable(corvine src/main.cpp)
