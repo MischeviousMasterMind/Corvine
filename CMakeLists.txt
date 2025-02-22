@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.24...3.30)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ====================================================================================================
-# Fetching dependencies such as Google Test and freeGLUT via URL
+# Fetching dependencies (i.e. Google Test, FreeGLUT) via URL
 
 include(FetchContent)
 
@@ -13,32 +13,46 @@ FetchContent_Declare(
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
 )
 
-# freeGLUT
+# FreeGLUT (v3.6.0)
 FetchContent_Declare(
-  freeGLUT
+  FreeGLUT
   URL https://github.com/freeglut/freeglut/releases/download/v3.6.0/freeglut-3.6.0.tar.gz
 )
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(googletest freeGLUT)
+FetchContent_MakeAvailable(googletest FreeGLUT)
+
+set(FreeGLUT_DIR ${CMAKE_BINARY_DIR}/_deps/freeglut-build/FreeGLUT)
+if(NOT FreeGLUT_FOUND)
+  message(ERROR "FreeGLUT not found!")
+endif()
+find_package(FreeGLUT)
+include_directories(${FreeGLUT_INCLUDE_DIR})
+
+# Finding OpenGL within the operating system, including it in the project and linking its libraries
+include(FindOpenGL)
+
+if(NOT OPENGL_FOUND)
+  message(ERROR "OpenGL not found!")
+endif()
+find_package(OpenGL REQUIRED)
+include_directories(OPENGL_INCLUDE_DIR)
+link_directories(OpenGL::GL)
 
 # ====================================================================================================
 
 project(Corvine VERSION 1.0.0)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 include_directories(include)
 
-add_library(CorvineLibrary STATIC
-    src/root/math/corvinemath.cpp
+add_executable(${PROJECT_NAME})
+add_subdirectory(src)
+
+link_libraries(FreeGLUT SHARED FreeGLUT::freeglut)
+
+target_link_libraries(${PROJECT_NAME} 
+  FreeGLUT
+  OpenGL::GL
 )
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
-
-add_executable(${PROJECT_NAME} src/main.cpp)
-
-target_link_directories(Corvine PUBLIC CorvineLibrary)
