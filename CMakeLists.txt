@@ -24,15 +24,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest FreeGLUT)
 
-# Setting up FreeGLUT and including its header files
-set(FreeGLUT_DIR ${CMAKE_BINARY_DIR}/_deps/freeglut-build/FreeGLUT)
-find_package(FreeGLUT REQUIRED)
-if(NOT FreeGLUT_FOUND)
-  message(ERROR "FreeGLUT not found!")
-endif()
-include_directories(${FreeGLUT_INCLUDE_DIR})
-link_directories(FreeGLUT::freeglut)
-
 # Finding OpenGL within the operating system, including its header files, and linking its libraries
 include(FindOpenGL)
 

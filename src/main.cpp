@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     std::cout << "WHYYYY" << std::endl;
     glutInit(&argc, argv);
     glutCreateWindow("Corvine Test");
-    glutInitWindowSize(1, 1);
+    glutInitWindowSize(100, 200);
     glutInitWindowPosition(0, 0);
     glutDisplayFunc(display);
     glutMainLoop();
