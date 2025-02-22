@@ -22,7 +22,6 @@ void display() {
 
 int main(int argc, char** argv)
 {
-    std::cout << "WHYYYY" << std::endl;
     glutInit(&argc, argv);
     glutCreateWindow("Corvine Test");
     glutInitWindowSize(100, 200);
