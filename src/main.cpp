@@ -1,9 +1,8 @@
 #include <iostream>
 
-#include "corvinemath.hpp"
+#include "root/math/corvinemath.hpp"
 
-#define Matrix corvine::Matrix
-#define Vector corvine::Vector
+using namespace corvine;
 
 int main()
 {
