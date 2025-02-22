@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ====================================================================================================
-# Fetching dependencies (i.e. Google Test, FreeGLUT) via URL
+# Fetching Google Test and FreeGLUT dependencies via URL
 
 include(FetchContent)
 
@@ -24,20 +24,22 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest FreeGLUT)
 
+# Setting up FreeGLUT and including its header files
 set(FreeGLUT_DIR ${CMAKE_BINARY_DIR}/_deps/freeglut-build/FreeGLUT)
+find_package(FreeGLUT REQUIRED)
 if(NOT FreeGLUT_FOUND)
   message(ERROR "FreeGLUT not found!")
 endif()
-find_package(FreeGLUT)
 include_directories(${FreeGLUT_INCLUDE_DIR})
+link_directories(FreeGLUT::freeglut)
 
-# Finding OpenGL within the operating system, including it in the project and linking its libraries
+# Finding OpenGL within the operating system, including its header files, and linking its libraries
 include(FindOpenGL)
 
+find_package(OpenGL REQUIRED)
 if(NOT OPENGL_FOUND)
   message(ERROR "OpenGL not found!")
 endif()
-find_package(OpenGL REQUIRED)
 include_directories(OPENGL_INCLUDE_DIR)
 link_directories(OpenGL::GL)
 
@@ -49,8 +51,6 @@ include_directories(include)
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
-
-link_libraries(FreeGLUT SHARED FreeGLUT::freeglut)
 
 target_link_libraries(${PROJECT_NAME} 
   FreeGLUT
