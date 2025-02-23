@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.24...3.30)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+project(Corvine VERSION 1.0.0)
+
 # ====================================================================================================
 # Fetching Google Test and FreeGLUT dependencies via URL
 
@@ -24,21 +26,26 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest freeglut)
 
+include(FindGLUT)
+
+set(OPENGL_LIBRARY_DIR ${freeglut_BINARY_DIR}/lib)
+
+if(NOT GLUT_FOUND)
+  message(ERROR "FreeGLUT not found!")
+endif()
+find_package(GLUT REQUIRED)
+include_directories(${GLUT_INCLUDE_DIR})
+
 # Finding OpenGL within the operating system, including its header files, and linking its libraries
 include(FindOpenGL)
 
-set(FreeGLUT_DIR ${freeglut_BINARY_DIR}/FreeGLUT)
-find_package(FreeGLUT REQUIRED)
-
-find_package(OpenGL REQUIRED)
 if(NOT OPENGL_FOUND)
   message(ERROR "OpenGL not found!")
 endif()
-include_directories(OPENGL_INCLUDE_DIR)
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR})
 
 # ====================================================================================================
-
-project(Corvine VERSION 1.0.0)
 
 include_directories(include)
 
@@ -46,6 +53,6 @@ add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
 target_link_libraries(${PROJECT_NAME} 
-  FreeGLUT::freeglut
+  GLUT::GLUT
   OpenGL::GL
 )
