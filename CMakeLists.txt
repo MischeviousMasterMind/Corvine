@@ -47,4 +47,4 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 include_directories(include)
-include_directories(${FreeGLUT_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC FreeGLUT)
