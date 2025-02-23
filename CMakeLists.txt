@@ -4,17 +4,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Corvine VERSION 1.0.0)
 
-include(FetchContent)
-include(FindGLUT)
-include(FindOpenGL)
-
-if(NOT GLUT_FOUND)
-  message("GLUT not found, installing using vcpckg")
-  execute_process(COMMAND vcpckg install freeglut)
-endif()
-
 # ====================================================================================================
-# Fetching Google Test and FreeGLUT dependencies via URL
+# Fetching Google Test via URL
+include(FetchContent)
 
 # Google Test
 FetchContent_Declare(
@@ -28,14 +20,18 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Including FreeGLUT's header files and linking its libraries
+include(FindGLUT)
 
-if(NOT GLUT_FOUND)
-  message(ERROR "GLUT not found!")
+if(GLUT_FOUND)
+  find_package(GLUT REQUIRED)
+  include_directories(GLUT_INCLUDE_DIR)
+else()
+  message("GLUT not found, installing using vcpckg")
+  execute_process(COMMAND vcpkg install freeglut)
 endif()
-find_package(GLUT REQUIRED)
-include_directories(GLUT_INCLUDE_DIR)
 
 # Finding OpenGL within the operating system, including its header files, and linking its libraries
+include(FindOpenGL)
 
 if(NOT OPENGL_FOUND)
   message(ERROR "OpenGL not found!")
