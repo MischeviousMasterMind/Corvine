@@ -38,7 +38,7 @@ if(NOT OPENGL_FOUND)
 endif()
 find_package(OpenGL REQUIRED)
 include_directories(OPENGL_INCLUDE_DIR)
-link_directories(OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
 # ====================================================================================================
 
@@ -47,6 +47,3 @@ include_directories(include)
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
-
-# Links FreeGLUT and OpenGL libraries
-target_link_libraries(${PROJECT_NAME} GLUT::GLUT OpenGL::GL)
