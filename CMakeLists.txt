@@ -27,6 +27,9 @@ FetchContent_MakeAvailable(googletest freeglut)
 # Finding OpenGL within the operating system, including its header files, and linking its libraries
 include(FindOpenGL)
 
+set(FreeGLUT_DIR ${freeglut_BINARY_DIR}/FreeGLUT)
+find_package(FreeGLUT REQUIRED)
+
 find_package(OpenGL REQUIRED)
 if(NOT OPENGL_FOUND)
   message(ERROR "OpenGL not found!")
@@ -42,9 +45,7 @@ include_directories(include)
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
-add_subdirectory(${freeglut_SOURCE_DIR})
-
 target_link_libraries(${PROJECT_NAME} 
-  freeglut
+  FreeGLUT::freeglut
   OpenGL::GL
 )
