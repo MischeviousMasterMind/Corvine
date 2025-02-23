@@ -42,6 +42,8 @@ include_directories(include)
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
+add_subdirectory(${freeglut_SOURCE_DIR})
+
 target_link_libraries(${PROJECT_NAME} 
   freeglut
   OpenGL::GL
