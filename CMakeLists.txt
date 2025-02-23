@@ -10,7 +10,7 @@ include(FindOpenGL)
 
 if(NOT GLUT_FOUND)
   message("GLUT not found, installing using vcpckg")
-  execute_process(COMMAND vcpckg install freeglut)
+  execute_process(COMMAND vcpkg install freeglut)
 endif()
 
 # ====================================================================================================
