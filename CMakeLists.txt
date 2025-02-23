@@ -38,6 +38,9 @@ link_directories(OpenGL::GL)
 
 project(Corvine VERSION 1.0.0)
 
+include_directories(include)
+include_directories(${FreeGLUT_INCLUDE_DIR})
+
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
@@ -45,6 +48,3 @@ target_link_libraries(${PROJECT_NAME}
   FreeGLUT
   OpenGL::GL
 )
-
-include_directories(include)
-include_directories(${FreeGLUT_INCLUDE_DIR})
