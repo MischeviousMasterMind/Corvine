@@ -24,8 +24,11 @@ FetchContent_MakeAvailable(googletest)
 # Includes root project header files in the include directory
 include_directories(include)
 
-add_executable(${PROJECT_NAME})
+add_executable(${CMAKE_PROJECT_NAME})
 add_subdirectory(src)
+
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+   ${CMAKE_SOURCE_DIR}/bin )
 
 # Including FreeGLUT's header files and linking its libraries
 include(FindGLUT)
@@ -33,10 +36,13 @@ include(FindGLUT)
 if(NOT GLUT_FOUND)
   message("GLUT not found, installing using vcpckg")
   execute_process(COMMAND vcpkg install freeglut)
+  set(FreeGLUT_DIR "C:\\vcpkg\\packages\\freeglut_x64-windows\\share\\freeglut")
   set(GLUT_INCLUDE_DIR "C:\\vcpkg\\packages\\freeglut_x64-windows\\include")
-  set(OPENGL_LIBRARY_DIR "C:\\vcpkg\\packages\\freeglut_x64-windows\\lib")
+  set(GLUT_glut_LIBRARY "C:\\vcpkg\\packages\\freeglut_x64-windows\\lib\\freeglut.lib")
+  find_package(FreeGLUT CONFIG REQUIRED)
+else()
+  find_package(GLUT REQUIRED)
 endif()
-find_package(GLUT REQUIRED)
 include_directories(${GLUT_INCLUDE_DIR})
 
 # Finding OpenGL within the operating system, including its header files, and linking its libraries
@@ -48,4 +54,11 @@ endif()
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
-target_link_libraries(${PROJECT_NAME} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${GLUT_glut_LIBRARY} ${OPENGL_LIBRARIES})
+
+if(FreeGLUT_FOUND)
+  add_custom_command(TARGET Corvine 
+    POST_BUILD 
+    COMMAND 
+    ${CMAKE_COMMAND} -E copy "C:\\vcpkg\\packages\\freeglut_x64-windows\\bin\\freeglut.dll" ${CMAKE_SOURCE_DIR}/bin)
+endif()

@@ -22,12 +22,12 @@ void display() {
 
 int main(int argc, char** argv)
 {
+    std::cout << "Hello World!" << std::endl;
     glutInit(&argc, argv);
     glutCreateWindow("Corvine Test");
     glutInitWindowSize(100, 200);
     glutInitWindowPosition(0, 0);
     glutDisplayFunc(display);
     glutMainLoop();
-    std::cout << "Hello World!" << std::endl;
     return 0;
 }
