@@ -38,7 +38,6 @@ if(NOT OPENGL_FOUND)
 endif()
 find_package(OpenGL REQUIRED)
 include_directories(OPENGL_INCLUDE_DIR)
-target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
 # ====================================================================================================
 
@@ -47,3 +46,5 @@ include_directories(include)
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
+
+target_link_libraries(${PROJECT_NAME} OpenGL::GL)
