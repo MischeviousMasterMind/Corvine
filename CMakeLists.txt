@@ -15,14 +15,14 @@ FetchContent_Declare(
 
 # FreeGLUT (v3.6.0)
 FetchContent_Declare(
-  FreeGLUT
+  freeglut
   URL https://github.com/freeglut/freeglut/releases/download/v3.6.0/freeglut-3.6.0.tar.gz
 )
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-FetchContent_MakeAvailable(googletest FreeGLUT)
+FetchContent_MakeAvailable(googletest freeglut)
 
 # Finding OpenGL within the operating system, including its header files, and linking its libraries
 include(FindOpenGL)
@@ -32,22 +32,17 @@ if(NOT OPENGL_FOUND)
   message(ERROR "OpenGL not found!")
 endif()
 include_directories(OPENGL_INCLUDE_DIR)
-link_directories(OpenGL::GL)
 
 # ====================================================================================================
 
 project(Corvine VERSION 1.0.0)
 
 include_directories(include)
-include_directories(${FreeGLUT_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
 target_link_libraries(${PROJECT_NAME} 
-  FreeGLUT
+  freeglut
   OpenGL::GL
 )
-
-include_directories(include)
-target_include_directories(${PROJECT_NAME} PUBLIC FreeGLUT)
