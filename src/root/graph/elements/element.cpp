@@ -1,0 +1,7 @@
+namespace corvine {
+
+    class Element {
+
+    };
+
+}

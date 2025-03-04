@@ -27,9 +27,6 @@ include_directories(include)
 add_executable(${CMAKE_PROJECT_NAME})
 add_subdirectory(src)
 
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
-   ${CMAKE_SOURCE_DIR}/bin )
-
 # Including FreeGLUT's header files and linking its libraries
 include(FindGLUT)
 
@@ -40,6 +37,13 @@ if(NOT GLUT_FOUND)
   set(GLUT_INCLUDE_DIR "C:\\vcpkg\\packages\\freeglut_x64-windows\\include")
   set(GLUT_glut_LIBRARY "C:\\vcpkg\\packages\\freeglut_x64-windows\\lib\\freeglut.lib")
   find_package(FreeGLUT CONFIG REQUIRED)
+
+  add_custom_command(TARGET Corvine
+    POST_BUILD
+    COMMAND 
+    ${CMAKE_COMMAND} -E copy "C:\\vcpkg\\packages\\freeglut_x64-windows\\bin\\freeglut.dll" ${RUNTIME_OUTPUT_PATH}\.
+  )
+  
 else()
   find_package(GLUT REQUIRED)
 endif()
@@ -55,10 +59,3 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} ${GLUT_glut_LIBRARY} ${OPENGL_LIBRARIES})
-
-if(FreeGLUT_FOUND)
-  add_custom_command(TARGET Corvine 
-    POST_BUILD 
-    COMMAND 
-    ${CMAKE_COMMAND} -E copy "C:\\vcpkg\\packages\\freeglut_x64-windows\\bin\\freeglut.dll" ${CMAKE_SOURCE_DIR}/bin)
-endif()
