@@ -3,13 +3,23 @@
 
 namespace corvine {
     
-    class Folder {
+    struct Folder : Element {
 
-        public:
-            Folder()
-            {
-            
-            }
+        bool isShown = true;
+        bool isExpanded = true;
+        LinkedList<Element> elements;
+
+        Folder()
+        {
+            elements = LinkedList<Element>();
+        }
+
+        Folder(LinkedList<Element> elements)
+        {
+            this->elements = elements;
+        }
+
+
 
     };
 
