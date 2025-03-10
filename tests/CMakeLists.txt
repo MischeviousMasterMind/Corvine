@@ -1,3 +1,3 @@
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS *.cpp)
 
-add_executable(corvine_test ${SOURCE_FILES})
+target_sources(corvine_test PRIVATE ${SOURCE_FILES})

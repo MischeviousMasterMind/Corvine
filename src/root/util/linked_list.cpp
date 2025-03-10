@@ -18,35 +18,39 @@ namespace corvine
         struct Node
         {
             Node *next;
-            T data;
+            T *data;
 
-            Node(T data) : data(data), next(nullptr) {}
+            Node() : next(nullptr), data(nullptr) {}
+
+            Node(T &data) : next(nullptr)
+            {
+                this->data = &data;
+            }
         };
 
         class IndexOutOfBoundsException : public _exception
         {
 
         private:
-            int index;
-            int length;
+            size_t index;
+            size_t length;
 
         public:
-            IndexOutOfBoundsException(int index, int length) : index(index), length(length) {}
+            IndexOutOfBoundsException(size_t index, size_t length) : index(index), length(length) {}
 
-            const char* what() const throw()
+            const char *what() const throw()
             {
                 return "Index " + index + " out of bounds for length " + length;
             }
-        
         };
 
     private:
-        int length;
+        size_t length;
         Node *head;
 
     public:
         /**
-         * @brief Constructs a LinkedList object with the \c head node initialized 
+         * @brief Constructs a LinkedList object with the \c head node initialized
          * with \c nullptr and \c length intialized as \c 0
          */
         LinkedList()
@@ -55,40 +59,37 @@ namespace corvine
             length = 0;
         }
 
-        LinkedList(Node *head) : LinkedList()
+        LinkedList(Node &head) : LinkedList()
         {
-            this->head = head;
+            this->head = &head;
 
-            if(head == nullptr)
-                return;
+            Node *temp = &head;
 
-            Node *temp = head;
-
-            while(temp != nullptr)
+            while (temp != nullptr)
             {
                 length++;
                 temp = temp->next;
             }
         }
 
-        LinkedList(int initialCapacity) : LinkedList()
+        LinkedList(size_t initialCapacity) : LinkedList()
         {
-            for (int i = 0; i < initialCapacity; i++)
+            for (size_t i = 0; i < initialCapacity; i++)
                 add(nullptr);
         }
 
         LinkedList(T data[]) : LinkedList()
         {
-            for (int i = 0; i < sizeof(data); i++)
+            for (size_t i = 0; i < sizeof(data); i++)
                 add(data[i]);
         }
 
-        int size()
+        size_t size() const
         {
             return length;
         }
 
-        void add(T data)
+        void add(T &data)
         {
             length++;
             Node newNode = Node(data);
@@ -107,12 +108,12 @@ namespace corvine
             temp->next = &newNode;
         }
 
-        bool add(int index, T data)
+        bool add(size_t index, T &data)
         {
-            if(index < 0 || index >= length)
+            if (index < 0 || index >= length)
                 return false;
 
-            if(index == length - 1)
+            if (index == length - 1)
             {
                 add(data);
                 return true;
@@ -130,7 +131,7 @@ namespace corvine
 
             Node *temp = head;
 
-            for(int i; i < index - 1; i++)
+            for (size_t i = 0; i < index - 1; i++)
                 temp = temp->next;
 
             newNode.next = temp->next;
@@ -139,74 +140,76 @@ namespace corvine
             return true;
         }
 
-        T remove(int index)
+        T *remove(size_t index)
         {
-            if(index < 0 || index >= length)
+            if (index < 0 || index >= length)
                 throw IndexOutOfBoundsException(index, length);
-            
+
             Node *temp = head;
 
-            if(index == 0)
+            if (index == 0)
             {
                 head = head->next;
 
-                T data = (*temp).data;
+                T *data = (*temp).data;
                 ~(*temp)();
 
-                return data;
+                return *data;
             }
 
-            for(int i = 0; i < index - 1; i++)
+            for (size_t i = 0; i < index - 1; i++)
                 temp = temp->next;
-            
+
             Node *removed = temp->next;
-            T data = removed->data;
+            T *data = removed->data;
 
             temp->next = temp->next->next;
             ~(*removed)();
 
-            return data;
+            return *data;
         }
 
-        T set(int index, T data) {
-            if(index < 0 || index >= length)
+        T set(size_t index, T &data)
+        {
+            if (index < 0 || index >= length)
                 throw IndexOutOfBoundsException(index, length);
-            
+
             Node *temp = head;
 
-            for(int i = 0; i < index; i ++)
+            for (size_t i = 0; i < index; i++)
                 temp = temp->next;
-            
+
             T previousData = temp->data;
-            temp->data = data;
+            temp->data = &data;
 
             return previousData;
         }
 
-        T get(int index)
+        T *get(size_t index)
         {
-            if(index < 0 || index >= length)
+            if (index < 0 || index >= length)
                 throw IndexOutOfBoundsException(index, length);
-            
+
             Node *temp = head;
 
-            for(int i = 0; i < index; i ++)
+            for (size_t i = 0; i < index; i++)
                 temp = temp->next;
-            
+
             return temp->data;
         }
 
-        int indexOf(T data) {
+        size_t indexOf(T &data)
+        {
             Node *temp = head;
 
-            for(int i = 0; i < length; i++)
+            for (size_t i = 0; i < length; i++)
             {
-                if(temp->data == data)
+                if (temp->data == &data)
                     return i;
-            
+
                 temp = temp->next;
             }
-            
+
             return -1;
         }
 
@@ -230,14 +233,9 @@ namespace corvine
             }
         }
 
-        T operator=(const T data[])
+        Node *getHead()
         {
-            clear();
-
-            for (int i = 0; i < sizeof(data); i++)
-                add(data[i]);
-
-            return *this;
+            return head;
         }
     };
 
