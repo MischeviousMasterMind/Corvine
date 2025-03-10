@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 namespace corvine
 {
     /** \class
@@ -18,7 +20,24 @@ namespace corvine
             Node *next;
             T data;
 
-            Node(T data) : data(data) {}
+            Node(T data) : data(data), next(nullptr) {}
+        };
+
+        class IndexOutOfBoundsException : public _exception
+        {
+
+        private:
+            int index;
+            int length;
+
+        public:
+            IndexOutOfBoundsException(int index, int length) : index(index), length(length) {}
+
+            const char* what() const throw()
+            {
+                return "Index " + index + " out of bounds for length " + length;
+            }
+        
         };
 
     private:
@@ -34,6 +53,22 @@ namespace corvine
         {
             head = nullptr;
             length = 0;
+        }
+
+        LinkedList(Node *head) : LinkedList()
+        {
+            this->head = head;
+
+            if(head == nullptr)
+                return;
+
+            Node *temp = head;
+
+            while(temp != nullptr)
+            {
+                length++;
+                temp = temp->next;
+            }
         }
 
         LinkedList(int initialCapacity) : LinkedList()
@@ -107,7 +142,7 @@ namespace corvine
         T remove(int index)
         {
             if(index < 0 || index >= length)
-                return nullptr;
+                throw IndexOutOfBoundsException(index, length);
             
             Node *temp = head;
 
@@ -135,7 +170,7 @@ namespace corvine
 
         T set(int index, T data) {
             if(index < 0 || index >= length)
-                return nullptr;
+                throw IndexOutOfBoundsException(index, length);
             
             Node *temp = head;
 
@@ -151,7 +186,7 @@ namespace corvine
         T get(int index)
         {
             if(index < 0 || index >= length)
-                return nullptr;
+                throw IndexOutOfBoundsException(index, length);
             
             Node *temp = head;
 

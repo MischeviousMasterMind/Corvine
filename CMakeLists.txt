@@ -59,3 +59,11 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} ${GLUT_glut_LIBRARY} ${OPENGL_LIBRARIES})
+
+# Debugging and testing
+enable_testing()
+add_executable(corvine_test tests)
+target_link_libraries(corvine_test GTest::gtest_main ${GLUT_glut_LIBRARY} ${OPENGL_LIBRARIES})
+
+include(GoogleTest)
+gtest_discover_tests(corvine_test)
