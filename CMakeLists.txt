@@ -62,7 +62,7 @@ target_link_libraries(${PROJECT_NAME} ${GLUT_glut_LIBRARY} ${OPENGL_LIBRARIES})
 
 # Debugging and testing
 enable_testing()
-add_executable(corvine_test tests/linked_list_test.cpp)
+add_executable(corvine_test tests/linked_list_test.cpp tests/lambda_calculus_test.cpp)
 target_link_libraries(corvine_test GTest::gtest_main ${GLUT_glut_LIBRARY} ${OPENGL_LIBRARIES})
 
 include(GoogleTest)

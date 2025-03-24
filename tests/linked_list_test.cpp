@@ -72,10 +72,10 @@ TEST_F(LinkedListTest, TestGet)
     EXPECT_EQ(list3_.get(1), &object1_);
     EXPECT_EQ(list3_.get(2), &object2_);
 
-    EXPECT_THROW(list0_.get(0), LinkedList<TestClass>::IndexOutOfBoundsException);
+    EXPECT_THROW(list0_.get(0), IndexOutOfBoundsException);
 
-    EXPECT_THROW(list1_.get(-1), LinkedList<TestClass>::IndexOutOfBoundsException);
-    EXPECT_THROW(list1_.get(1), LinkedList<TestClass>::IndexOutOfBoundsException);
+    EXPECT_THROW(list1_.get(-1), IndexOutOfBoundsException);
+    EXPECT_THROW(list1_.get(1), IndexOutOfBoundsException);
 }
 
 TEST_F(LinkedListTest, TestAdd)

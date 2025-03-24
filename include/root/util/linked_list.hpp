@@ -1,7 +1,28 @@
 #include <stdexcept>
+#include <string>
+#include <sstream>
 
 namespace corvine
 {
+    class IndexOutOfBoundsException : public _exception
+    {
+
+    private:
+        size_t index;
+        size_t length;
+
+    public:
+        IndexOutOfBoundsException(size_t index, size_t length) : index(index), length(length) {}
+
+        const char *what() const throw()
+        {
+            std::stringstream ss;
+            ss << "Index " << index << "out of bounds for length " << length;
+
+            return ss.str().c_str();
+        }
+    };
+
     /** \class
      * @brief Linked list data type defined and used by Corvine.
      * @tparam T Generic class type
@@ -25,22 +46,6 @@ namespace corvine
             Node(T &data) : next(nullptr)
             {
                 this->data = &data;
-            }
-        };
-
-        class IndexOutOfBoundsException : public _exception
-        {
-
-        private:
-            size_t index;
-            size_t length;
-
-        public:
-            IndexOutOfBoundsException(size_t index, size_t length) : index(index), length(length) {}
-
-            const char *what() const throw()
-            {
-                return "Index " + index + " out of bounds for length " + length;
             }
         };
 
